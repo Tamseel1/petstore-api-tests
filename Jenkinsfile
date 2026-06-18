@@ -7,11 +7,29 @@ pipeline {
     }
 
     stages {
-        stage('Build & Test') {
+
+        stage('Checkout Code') {
             steps {
-                bat 'mvn clean test'
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat 'mvn clean compile'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                bat 'mvn test'
+            }
+        }
+
+        stage('Archive Reports') {
+            steps {
+                archiveArtifacts artifacts: 'target/surefire-reports/*.xml', fingerprint: true
             }
         }
     }
 }
-
